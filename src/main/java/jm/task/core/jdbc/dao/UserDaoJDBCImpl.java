@@ -19,8 +19,7 @@ public class UserDaoJDBCImpl implements UserDao {
         String sqlCommandToCreateTable = "create table if not exists Users (id BIGINT PRIMARY "
                 + "KEY AUTO_INCREMENT, name VARCHAR(20), " +
                 "lastName VARCHAR(20), age TINYINT)";
-        try (Statement statement = connection.createStatement();) {
-
+        try (Statement statement = connection.createStatement()) {
             statement.executeUpdate(sqlCommandToCreateTable);
             connection.commit();
             System.out.println("Создана таблица");
@@ -32,8 +31,7 @@ public class UserDaoJDBCImpl implements UserDao {
 
     public void dropUsersTable() throws SQLException {
         String sqlCommandToDropTable = "drop table if exists Users";
-        try {
-            Statement statement = connection.createStatement();
+        try(Statement statement = connection.createStatement()) {
             statement.executeUpdate(sqlCommandToDropTable);
             connection.commit();
             System.out.println("Таблица удалена");
@@ -45,8 +43,7 @@ public class UserDaoJDBCImpl implements UserDao {
 
     public void saveUser(String name, String lastName, byte age) throws SQLException {
         String sqlCommandSaveUser = "INSERT INTO Users (name, lastName, age) VALUES (?,?,?)";
-        try {
-            PreparedStatement preparedStatement = connection.prepareStatement(sqlCommandSaveUser);
+        try (PreparedStatement preparedStatement = connection.prepareStatement(sqlCommandSaveUser)) {
             preparedStatement.setString(1, name);
             preparedStatement.setString(2, lastName);
             preparedStatement.setByte(3, age);
@@ -61,8 +58,7 @@ public class UserDaoJDBCImpl implements UserDao {
 
     public void removeUserById(long id) throws SQLException {
         String sqlCommandDeleteByValue = "DELETE FROM Users WHERE id = 1";
-        try {
-            PreparedStatement preparedStatement = connection.prepareStatement(sqlCommandDeleteByValue);
+        try(PreparedStatement preparedStatement = connection.prepareStatement(sqlCommandDeleteByValue)) {
             preparedStatement.executeUpdate();
             connection.commit();
         } catch (SQLException e) {
@@ -74,10 +70,8 @@ public class UserDaoJDBCImpl implements UserDao {
     public List<User> getAllUsers() throws SQLException {
         List<User> userList = new ArrayList<>();
         String sqlCommandGetAll = "SELECT id, name, lastName, age FROM users";
-        try {
-            Statement statement = connection.createStatement();
+        try(Statement statement = connection.createStatement();) {
             ResultSet resultset = statement.executeQuery(sqlCommandGetAll);
-
             while (resultset.next()){
                 User user = new User();
                 user.setId(resultset.getLong("id"));
@@ -97,8 +91,7 @@ public class UserDaoJDBCImpl implements UserDao {
 
     public void cleanUsersTable() throws SQLException {
         String sqlCommandDeleteAll = "TRUNCATE TABLE users";
-        try {
-            PreparedStatement preparedStatement = connection.prepareStatement(sqlCommandDeleteAll);
+        try (PreparedStatement preparedStatement = connection.prepareStatement(sqlCommandDeleteAll);){
             preparedStatement.executeUpdate();
             System.out.println("Все строки удалены");
             connection.commit();
