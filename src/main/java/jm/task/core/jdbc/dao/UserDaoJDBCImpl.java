@@ -95,30 +95,30 @@ public class UserDaoJDBCImpl implements UserDao {
         String sqlCommandGetAll = "SELECT id, name, lastName, age FROM users";
         try (Connection connection = Util.getConnection()) {
             connection.setAutoCommit(false);
-            Statement statement = connection.createStatement();
-            ResultSet resultset = statement.executeQuery(sqlCommandGetAll);
-            while (resultset.next()) {
-                User user = new User();
-                user.setId(resultset.getLong("id"));
-                user.setName(resultset.getString("name"));
-                user.setLastName(resultset.getString("lastName"));
-                user.setAge(resultset.getByte("age"));
-                userList.add(user);
-                connection.commit();
-                System.out.println(userList);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
             try {
-                Util.getConnection().rollback();
-            } catch (Exception ex) {
-                ex.printStackTrace();
+                Statement statement = connection.createStatement();
+                ResultSet resultset = statement.executeQuery(sqlCommandGetAll);
+                while (resultset.next()) {
+                    User user = new User();
+                    user.setId(resultset.getLong("id"));
+                    user.setName(resultset.getString("name"));
+                    user.setLastName(resultset.getString("lastName"));
+                    user.setAge(resultset.getByte("age"));
+                    userList.add(user);
+                    connection.commit();
+                    System.out.println(userList);
+                }
+
+            } catch (SQLException e) {
+                e.printStackTrace();
             }
+        } catch (Exception ex) {
+            ex.printStackTrace();
         }
         return userList;
     }
 
-    public void cleanUsersTable() {
+        public void cleanUsersTable() {
         String sqlCommandDeleteAll = "TRUNCATE TABLE users";
         try (Connection connection = Util.getConnection()) {
             connection.setAutoCommit(false);
